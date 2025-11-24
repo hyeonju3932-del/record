@@ -5,176 +5,272 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>재민이와 발음 비교하기</title>
 <style>
- body {
-   font-family: "Pretendard", sans-serif;
-   background: #fff7d1;
-   margin: 0; padding: 0;
-   display: flex; flex-direction: column;
-   align-items: center;
-   padding: 20px;
-   text-align: center;
- }
- h1 {
-   font-size: 24px;
-   font-weight: 700;
-   margin-bottom: 10px;
- }
- .character-box {
-   text-align: center;
-   margin-bottom: 20px;
- }
- .section {
-   background: #ffffff;
-   width: 100%; max-width: 420px;
-   border-radius: 20px;
-   padding: 20px;
-   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-   margin-bottom: 25px;
- }
- button {
-   background: #ffd54f;
-   border: none;
-   padding: 12px 20px;
-   border-radius: 12px;
-   font-size: 16px;
-   cursor: pointer;
-   display: inline-block;
-   margin: 5px;
- }
- button:hover {
-   background: #ffca28;
- }
- .result-box {
-   margin-top: 15px;
-   background: #fff3c4;
-   padding: 15px;
-   border-radius: 14px;
-   text-align: center;
-   font-size: 18px;
-   font-weight: 600;
- }
- .emoji {
-   font-size: 22px;
-   margin-right: 6px;
- }
+  body {
+    font-family: "Pretendard", sans-serif;
+    background: #fff7d1;
+    margin: 0; padding: 0;
+    display: flex; flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* --- 1. 제목 박스 스타일 --- */
+  h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 5px; /* 소제목과의 간격을 위해 줄임 */
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: inline-block;
+    color: #333;
+  }
+
+  /* 소제목 스타일 */
+  .subtitle {
+    font-size: 16px;
+    color: #795548; /* 부드러운 갈색 톤 */
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 25px;
+  }
+
+  /* --- 2. 캐릭터와 말풍선 레이아웃 --- */
+  .character-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 15px;
+  }
+
+  .speech-bubble {
+    background: #ffffff;
+    padding: 15px 20px;
+    border-radius: 15px;
+    position: relative;
+    max-width: 200px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.4;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    color: #555;
+    font-weight: 600; /* 글씨 조금 더 진하게 */
+  }
+
+  .speech-bubble::after {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #ffffff transparent transparent;
+  }
+
+  .section {
+    background: #ffffff;
+    width: 100%; max-width: 420px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+  }
+  
+  h2 { font-size: 20px; margin-top: 0; }
+
+  .btn {
+    border: none; padding: 12px 20px; border-radius: 12px;
+    font-size: 16px; cursor: pointer; display: inline-block; margin: 5px;
+    font-weight: 600; color: #333; transition: 0.2s;
+  }
+  .btn-rec { background: #ff8a80; color: white; }
+  .btn-rec.recording { background: #d32f2f; animation: pulse 1.5s infinite; }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+
+  .result-box {
+    margin-top: 15px; background: #fff3c4; padding: 15px;
+    border-radius: 14px; text-align: center; font-size: 18px; font-weight: 600;
+    min-height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center;
+  }
+  .recognized-text { font-size: 14px; color: #666; font-weight: 400; margin-top: 5px; }
+  select { padding: 8px; font-size: 16px; border-radius: 8px; margin-bottom: 15px; width: 100%; }
+  audio { width: 100%; margin-bottom: 10px; }
 </style>
 </head>
 <body>
-<h1>1. 아, 어, 오, 우, 으, 이</h1>
 
-<div class="character-box">
- <img src="robot-character.png" alt="재민" width="180" />
- <p>네가 말한 소리가 맞는지 들어보고 알려줄게!</p>
+<h1>1. 아, 어, 오, 우, 으, 이</h1>
+<p class="subtitle">실력을 키워보자 ✨</p>
+
+<div class="character-area">
+  <img src="robot-character.jpg" alt="재민" width="120" onerror="this.src='https://via.placeholder.com/120?text=Robot'" style="border-radius: 10px;" />
+  
+  <div class="speech-bubble">
+    네가 말한 소리가 맞는지 들어보고 알려줄게!
+  </div>
 </div>
 
 <div class="section">
- <h2>비교하기</h2>
- <p>문장을 선택하고 모범 발음을 들어보세요.</p>
+  <h2>발음 비교하기</h2>
+  <p>1. 문장을 고르고 발음을 들어봐.</p> <select id="sentenceSelect" onchange="setSentence()">
+    <option value="">문장 선택</option>
+    <option value="아빠가 우산을 써요">1. 아빠가 우산을 써요.</option>
+    <option value="아기가 우유를 먹어요">2. 아기가 우유를 먹어요.</option>
+    <option value="어머니가 아이와 놀아요">3. 어머니가 아이와 놀아요.</option>
+    <option value="오빠가 아이스크림을 사요">4. 오빠가 아이스크림을 사요.</option>
+  </select>
 
- <select id="sentenceSelect" onchange="setSentence()" style="padding:8px; font-size:16px; border-radius:8px; margin-bottom:15px;">
-   <option value="">문장 선택</option>
-   <option value="1">1. 아빠가 우산을 써요.</option>
-   <option value="2">2. 아기가 우유를 먹어요.</option>
-   <option value="3">3. 어머니가 아이와 놀아요.</option>
-   <option value="4">4. 오빠가 아이스크림을 사요.</option>
- </select>
+  <audio id="baseAudioPlayer" controls></audio>
+  
+  <hr style="margin: 20px 0; border: 0; border-top: 1px dashed #ccc;">
 
- <audio id="baseAudioPlayer" controls style="margin-bottom:12px;"></audio>
- <br /></h2>
- <p>모범 발음과 내 발음을 함께 들어보세요.</p>
- <audio id="baseAudioPlayer" controls style="margin-bottom:12px;"></audio>
- <br /></h2>
- <button onclick="compareSound()">결과 보기</button>
- <div id="result" class="result-box">아직 비교 전입니다.</div>
+  <p>2. 아래 버튼을 누르고 따라 읽어봐.</p> <button id="recBtn" class="btn btn-rec" onclick="toggleRecording()">🎤 녹음 시작</button>
+  
+  <div id="result" class="result-box">
+    <span>결과를 보여줄게.</span> </div>
 </div>
 
 <script>
-let baseAudio = new Audio();
-let mediaRecorder;
-let chunks = [];
-let currentVowel = null;
+let recognition;
+let isRecording = false;
+let targetText = "";
 
-const baseSentences = {
-  1: 'base_sentence_1.mp3',
-  2: 'base_sentence_2.mp3',
-  3: 'base_sentence_3.mp3',
-  4: 'base_sentence_4.mp3'
+// 파일명은 그대로 유지
+const audioFiles = {
+  "아빠가 우산을 써요": "base_sentence_1.mp3",
+  "아기가 우유를 먹어요": "base_sentence_2.mp3",
+  "어머니가 아이와 놀아요": "base_sentence_3.mp3",
+  "오빠가 아이스크림을 사요": "base_sentence_4.mp3"
 };
 
-const baseData = {
-  a: { len: 600 },
-  eo: { len: 620 },
-  o: { len: 550 },
-  u: { len: 580 },
-  eu: { len: 500 },
-  i: { len: 520 }
-};
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.lang = 'ko-KR';
+  recognition.continuous = false;
+  recognition.interimResults = false;
 
-function playBase(v) {
-  currentVowel = v;
-  const src = `base_${v}.mp3`;
-  baseAudio.src = src;
-  document.getElementById('baseAudioPlayer').src = src;
-  baseAudio.play();
+  recognition.onresult = function(event) {
+    const spokenText = event.results[0][0].transcript;
+    compareResult(spokenText);
+    stopRecordingUI();
+  };
+
+  recognition.onerror = function(event) {
+    console.error(event.error);
+    stopRecordingUI();
+    // 반말 수정
+    document.getElementById('result').innerHTML = "😕 소리가 잘 안 들려. 다시 해볼까?";
+  };
+} else {
+  // 반말 수정
+  alert("이 브라우저에서는 안 돼. 크롬을 써줘!");
 }
 
 function setSentence() {
-  const num = document.getElementById('sentenceSelect').value;
-  if (!num) return;
-  const audioSrc = baseSentences[num];
-  document.getElementById('baseAudioPlayer').src = audioSrc;
-}(v) {
-  currentVowel = v;
-  const src = `base_${v}.mp3`;
-  baseAudio.src = src;
-  document.getElementById('baseAudioPlayer').src = src;
-  baseAudio.play();
-}(v) {
-  currentVowel = v;
-  baseAudio.src = `base_${v}.mp3`;
-  baseAudio.play();
-}
-
-function startRec() {
-  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-      mediaRecorder = new MediaRecorder(stream);
-      chunks = [];
-      mediaRecorder.ondataavailable = e => chunks.push(e.data);
-      mediaRecorder.onstop = e => {
-        const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
-        const url = URL.createObjectURL(blob);
-        document.getElementById('userAudio').src = url;
-      };
-      mediaRecorder.start();
-    }).catch(err => {
-      alert('마이크 접근이 차단되었습니다. 브라우저 설정을 확인하세요.');
-    });
+  const select = document.getElementById('sentenceSelect');
+  targetText = select.value;
+  
+  if (targetText && audioFiles[targetText]) {
+    document.getElementById('baseAudioPlayer').src = audioFiles[targetText];
+    // 반말 수정
+    document.getElementById('result').innerHTML = "준비 완료! 녹음 버튼을 눌러줘.";
   } else {
-    alert('이 브라우저는 녹음을 지원하지 않습니다.');
+    document.getElementById('baseAudioPlayer').src = "";
+    targetText = "";
   }
 }
 
-function stopRec() {
-  if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
-}
-
-function compareSound() {
-  if (!currentVowel) {
-    document.getElementById('result').innerHTML = '기준 음성을 먼저 선택하세요.';
+function toggleRecording() {
+  if (!targetText) {
+    // 반말 수정
+    alert("먼저 문장을 골라줘!");
     return;
   }
 
-  const baseLen = baseData[currentVowel].len;
-  const userLen = Math.floor(Math.random() * 300) + 400;
-  const diff = Math.abs(baseLen - userLen) / baseLen * 100;
+  if (!isRecording) {
+    isRecording = true;
+    recognition.start();
+    const btn = document.getElementById('recBtn');
+    // 반말 수정
+    btn.innerHTML = "👂 듣고 있어...";
+    btn.classList.add('recording');
+    document.getElementById('result').innerHTML = "말해 봐...";
+  } else {
+    recognition.stop();
+    stopRecordingUI();
+  }
+}
 
-  let resultText = '';
-  if (diff > 20) resultText = '<span class="emoji">😕</span>달라';
-  else if (diff > 5) resultText = '<span class="emoji">🙂</span>비슷해';
-  else resultText = '<span class="emoji">😄</span>정확해';
+function stopRecordingUI() {
+  isRecording = false;
+  const btn = document.getElementById('recBtn');
+  btn.innerHTML = "🎤 녹음 시작";
+  btn.classList.remove('recording');
+}
 
-  document.getElementById('result').innerHTML = resultText;
+function compareResult(spokenText) {
+  const cleanTarget = targetText.replace(/\s+/g, '');
+  const cleanSpoken = spokenText.replace(/\s+/g, '');
+  const similarity = getSimilarity(cleanTarget, cleanSpoken);
+
+  let emoji = '';
+  let message = '';
+
+  // 반말 수정
+  if (similarity === 100) {
+    emoji = '🥳';
+    message = '정확해! (100점)';
+  } else if (similarity >= 70) {
+    emoji = '🙂';
+    message = '비슷해! 조금 더 또박또박 말해볼까?';
+  } else {
+    emoji = '😕';
+    message = '달라. 다시 한번 들어봐.';
+  }
+
+  document.getElementById('result').innerHTML = `
+    <div>${emoji} ${message}</div>
+    <div class="recognized-text">내가 한 말: "${spokenText}"</div>
+  `;
+}
+
+function getSimilarity(s1, s2) {
+  const longer = s1.length > s2.length ? s1 : s2;
+  const shorter = s1.length > s2.length ? s2 : s1;
+  const longerLength = longer.length;
+  if (longerLength === 0) return 1.0;
+  const editDistance = levenshtein(longer, shorter);
+  return ((longerLength - editDistance) / longerLength) * 100;
+}
+
+function levenshtein(s, t) {
+  if (!s.length) return t.length;
+  if (!t.length) return s.length;
+  const arr = [];
+  for (let i = 0; i <= t.length; i++) {
+    arr[i] = [i];
+    for (let j = 1; j <= s.length; j++) {
+      arr[i][j] =
+        i === 0
+          ? j
+          : Math.min(
+              arr[i - 1][j] + 1,
+              arr[i][j - 1] + 1,
+              arr[i - 1][j - 1] + (s[j - 1] === t[i - 1] ? 0 : 1)
+            );
+    }
+  }
+  return arr[t.length][s.length];
 }
 </script>
 </body>
