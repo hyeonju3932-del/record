@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>재민이와 발음 비교하기</title>
+<style>
+ body {
+   font-family: "Pretendard", sans-serif;
+   background: #fff7d1;
+   margin: 0; padding: 0;
+   display: flex; flex-direction: column;
+   align-items: center;
+   padding: 20px;
+   text-align: center;
+ }
+ h1 {
+   font-size: 24px;
+   font-weight: 700;
+   margin-bottom: 10px;
+ }
+ .character-box {
+   text-align: center;
+   margin-bottom: 20px;
+ }
+ .section {
+   background: #ffffff;
+   width: 100%; max-width: 420px;
+   border-radius: 20px;
+   padding: 20px;
+   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+   margin-bottom: 25px;
+ }
+ button {
+   background: #ffd54f;
+   border: none;
+   padding: 12px 20px;
+   border-radius: 12px;
+   font-size: 16px;
+   cursor: pointer;
+   display: inline-block;
+   margin: 5px;
+ }
+ button:hover {
+   background: #ffca28;
+ }
+ .result-box {
+   margin-top: 15px;
+   background: #fff3c4;
+   padding: 15px;
+   border-radius: 14px;
+   text-align: center;
+   font-size: 18px;
+   font-weight: 600;
+ }
+ .emoji {
+   font-size: 22px;
+   margin-right: 6px;
+ }
+</style>
+</head>
+<body>
+<h1>1. 아, 어, 오, 우, 으, 이</h1>
+
+<div class="character-box">
+ <img src="robot-character.png" alt="재민" width="180" />
+ <p>네가 말한 소리가 맞는지 들어보고 알려줄게!</p>
+</div>
+
+<div class="section">
+ <h2>비교하기</h2>
+ <p>문장을 선택하고 모범 발음을 들어보세요.</p>
+
+ <select id="sentenceSelect" onchange="setSentence()" style="padding:8px; font-size:16px; border-radius:8px; margin-bottom:15px;">
+   <option value="">문장 선택</option>
+   <option value="1">1. 아빠가 우산을 써요.</option>
+   <option value="2">2. 아기가 우유를 먹어요.</option>
+   <option value="3">3. 어머니가 아이와 놀아요.</option>
+   <option value="4">4. 오빠가 아이스크림을 사요.</option>
+ </select>
+
+ <audio id="baseAudioPlayer" controls style="margin-bottom:12px;"></audio>
+ <br /></h2>
+ <p>모범 발음과 내 발음을 함께 들어보세요.</p>
+ <audio id="baseAudioPlayer" controls style="margin-bottom:12px;"></audio>
+ <br /></h2>
+ <button onclick="compareSound()">결과 보기</button>
+ <div id="result" class="result-box">아직 비교 전입니다.</div>
+</div>
+
+<script>
+let baseAudio = new Audio();
+let mediaRecorder;
+let chunks = [];
+let currentVowel = null;
+
+const baseSentences = {
+  1: 'base_sentence_1.mp3',
+  2: 'base_sentence_2.mp3',
+  3: 'base_sentence_3.mp3',
+  4: 'base_sentence_4.mp3'
+};
+
+const baseData = {
+  a: { len: 600 },
+  eo: { len: 620 },
+  o: { len: 550 },
+  u: { len: 580 },
+  eu: { len: 500 },
+  i: { len: 520 }
+};
+
+function playBase(v) {
+  currentVowel = v;
+  const src = `base_${v}.mp3`;
+  baseAudio.src = src;
+  document.getElementById('baseAudioPlayer').src = src;
+  baseAudio.play();
+}
+
+function setSentence() {
+  const num = document.getElementById('sentenceSelect').value;
+  if (!num) return;
+  const audioSrc = baseSentences[num];
+  document.getElementById('baseAudioPlayer').src = audioSrc;
+}(v) {
+  currentVowel = v;
+  const src = `base_${v}.mp3`;
+  baseAudio.src = src;
+  document.getElementById('baseAudioPlayer').src = src;
+  baseAudio.play();
+}(v) {
+  currentVowel = v;
+  baseAudio.src = `base_${v}.mp3`;
+  baseAudio.play();
+}
+
+function startRec() {
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+      mediaRecorder = new MediaRecorder(stream);
+      chunks = [];
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = e => {
+        const blob = new Blob(chunks, { type: 'audio/ogg; codecs=opus' });
+        const url = URL.createObjectURL(blob);
+        document.getElementById('userAudio').src = url;
+      };
+      mediaRecorder.start();
+    }).catch(err => {
+      alert('마이크 접근이 차단되었습니다. 브라우저 설정을 확인하세요.');
+    });
+  } else {
+    alert('이 브라우저는 녹음을 지원하지 않습니다.');
+  }
+}
+
+function stopRec() {
+  if (mediaRecorder && mediaRecorder.state !== "inactive") mediaRecorder.stop();
+}
+
+function compareSound() {
+  if (!currentVowel) {
+    document.getElementById('result').innerHTML = '기준 음성을 먼저 선택하세요.';
+    return;
+  }
+
+  const baseLen = baseData[currentVowel].len;
+  const userLen = Math.floor(Math.random() * 300) + 400;
+  const diff = Math.abs(baseLen - userLen) / baseLen * 100;
+
+  let resultText = '';
+  if (diff > 20) resultText = '<span class="emoji">😕</span>달라';
+  else if (diff > 5) resultText = '<span class="emoji">🙂</span>비슷해';
+  else resultText = '<span class="emoji">😄</span>정확해';
+
+  document.getElementById('result').innerHTML = resultText;
+}
+</script>
+</body>
+</html>
